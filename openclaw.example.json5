@@ -1,0 +1,18 @@
+// Copy to project root or merge into ~/.config/openclaw/openclaw.json
+// See: https://docs.openclaw.ai/gateway/configuration
+{
+  agents: {
+    defaults: {
+      // Point workspace at this repo’s shipped template (or ~/.openclaw/workspace after copy):
+      workspace: "~/path/to/ai-agent-assist/workspace",
+      // Optional: repo root shown in system prompt
+      repoRoot: "~/path/to/ai-agent-assist",
+    },
+  },
+  skills: {
+    load: {
+      // Optional: also scan this repo for skills when developing here
+      extraDirs: ["~/path/to/ai-agent-assist/workspace/skills"],
+    },
+  },
+}
