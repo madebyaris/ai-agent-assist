@@ -1,0 +1,81 @@
+// MERGE into ~/.config/openclaw/openclaw.json (or OPENCLAW_CONFIG_PATH).
+// Example: two agents, channel bindings, sub-agent defaults, optional agent-to-agent.
+// Docs: https://docs.openclaw.ai/concepts/multi-agent
+//       https://docs.openclaw.ai/tools/subagents
+//       https://docs.openclaw.ai/gateway/config-agents
+{
+  agents: {
+    defaults: {
+      // Fallback when an agent omits workspace (each agent usually sets its own).
+      workspace: "~/.openclaw/workspace",
+      repoRoot: "~/Projects/your-monorepo",
+
+      // Sub-agent defaults (sessions_spawn, /subagents). Per-agent override: agents.list[].subagents
+      subagents: {
+        maxSpawnDepth: 2, // 1 = leaf sub-agents only; 2 = orchestrator → worker pattern
+        maxChildrenPerAgent: 5,
+        maxConcurrent: 8,
+        runTimeoutSeconds: 900, // 0 = no timeout (when omitted at spawn time)
+        // Optional: cheaper model for children (uncomment and set your catalog ids)
+        // model: "openai/gpt-5.4-mini",
+        // thinking: "low",
+      },
+
+      // Optional: shared skill allowlist for agents that do not set agents.list[].skills.
+      // Omit for unrestricted skills. Non-empty agents.list[].skills REPLACES this list (no merge).
+      // skills: ["github"],
+    },
+
+    list: [
+      {
+        id: "chat",
+        default: true,
+        name: "Everyday",
+        workspace: "~/.openclaw/workspace-chat",
+        // model: "anthropic/claude-sonnet-4-6",
+      },
+      {
+        id: "opus",
+        name: "Deep Work",
+        workspace: "~/.openclaw/workspace-opus",
+        // agentDir: "~/.openclaw/agents/opus/agent", // optional explicit state dir
+        model: "anthropic/claude-opus-4-6",
+        // Per-agent sub-agent overrides:
+        // subagents: { model: "openai/gpt-5.4-mini", runTimeoutSeconds: 600 },
+      },
+    ],
+  },
+
+  // Deterministic routing: order matters; more-specific matches first (e.g. peer before channel-wide).
+  // https://docs.openclaw.ai/concepts/multi-agent
+  bindings: [
+    // Example: one WhatsApp DM always goes to the deep agent; everyone else uses chat agent.
+    // {
+    //   agentId: "opus",
+    //   match: { channel: "whatsapp", peer: { kind: "direct", id: "+15551234567" } },
+    // },
+    // Channel-wide fallbacks (example from docs: Telegram → opus, WhatsApp → chat):
+    { agentId: "opus", match: { channel: "telegram" } },
+    { agentId: "chat", match: { channel: "whatsapp" } },
+  ],
+
+  // Tool profile: "coding" and "full" expose sessions_spawn by default; "messaging" does NOT.
+  // If you stay on messaging, add: tools.alsoAllow: ["sessions_spawn", "sessions_yield", "subagents"]
+  tools: {
+    profile: "coding",
+    // alsoAllow: ["browser"],
+
+    // Off by default — enable only if agents should message each other by design.
+    agentToAgent: {
+      enabled: false,
+      allow: ["chat", "opus"],
+    },
+  },
+
+  skills: {
+    load: {
+      extraDirs: ["~/.openclaw/workspace-chat/skills", "~/.openclaw/workspace-opus/skills"],
+    },
+    // limits: { maxSkillsPromptChars: 18000 },
+  },
+}

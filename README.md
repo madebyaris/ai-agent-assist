@@ -9,12 +9,13 @@ Opinionated **OpenClaw** (and **Hermes → OpenClaw** compatible) workspace: rul
 3. Edit `workspace/USER.md` on the machine where the agent runs.
 4. Restart the gateway or start a new session (`/new`) so bootstrap files and skills load.
 
-See `workspace/README.md` and `openclaw.example.json5` for layout and config hints.
+See `workspace/README.md`, `openclaw.example.json5`, and **`openclaw.multi-agent.example.json5`** for layout and config hints.
 
 ## What you get
 
 - **AGENTS.md** — Merges OpenClaw’s template patterns (session startup, memory, red lines, groups, heartbeats) with broader missions: coding, design critique, research, and ethical OSINT-style discovery.
-- **Skills** — `SKILL.md` playbooks for `coding-session`, `research-stack`, `osint-safe`, `design-critique`.
+- **Skills** — `SKILL.md` playbooks for `coding-session`, `research-stack`, `osint-safe`, `design-critique`, **`subagent-brief`** (delegation / `sessions_spawn`).
 - **scripts/verify-citations.mjs** — Lists unique URLs in a notes file for manual verification (no network calls).
+- **openclaw.multi-agent.example.json5** — Example **`agents.list`**, **`bindings`**, **`subagents`** defaults, **`tools.profile`** (spawn requires `coding`/`full` or `alsoAllow`), optional **`agentToAgent`**.
 
 This repo is a **portable template**, not a fork of OpenClaw itself. For upstream behavior, see [OpenClaw docs](https://docs.openclaw.ai/).

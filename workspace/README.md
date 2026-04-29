@@ -30,5 +30,10 @@ Aligned folder names and frontmatter `name:` fields:
 - `design-critique`
 - `research-stack`
 - `osint-safe`
+- `subagent-brief`
 
 Use `openclaw skills list` after copying to verify discovery.
+
+## Multi-agent config example
+
+At repo root, **`openclaw.multi-agent.example.json5`** shows `agents.list`, `bindings`, `subagents` defaults, and `skills.load.extraDirs` for two workspaces — merge into your OpenClaw config after adjusting paths and agent ids.

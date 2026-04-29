@@ -130,6 +130,8 @@ Track lightweight rotation state if helpful in `memory/heartbeat-state.json` (se
 
 **Resilience:** If the **gateway restarts**, in-flight sub-agent “announce back” to the parent can be **lost** (best-effort). File-based **memory in the main workspace** is unchanged; don’t assume a child completed without checking.
 
+For delegation playbooks (brief writing, isolated vs `fork`, no polling), load the **`subagent-brief`** skill.
+
 ## Session Startup (compact reinjection)
 
 These headings exist for OpenClaw **post-compaction** reinjection (`Session Startup`, `Red Lines`). Keep them stable.
