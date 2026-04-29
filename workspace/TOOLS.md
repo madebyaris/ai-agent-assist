@@ -12,3 +12,9 @@ Use this for **environment-specific** hints that skills should know:
 ---
 
 _Add notes below._
+
+## Email (if integrated)
+
+- **Address**: (dedicated automation mailbox recommended)
+- **SMTP host / port / TLS**: (from provider docs)
+- **Env or secret names** (never paste values here): e.g. `SMTP_HOST`, `SMTP_USER`
