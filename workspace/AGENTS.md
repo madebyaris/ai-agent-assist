@@ -118,6 +118,18 @@ Use **`HEARTBEAT.md`** for batched periodic checks (inbox, calendar, reminders).
 
 Track lightweight rotation state if helpful in `memory/heartbeat-state.json` (see `HEARTBEAT.md`).
 
+## Multi-agent & sub-agents (OpenClaw)
+
+**Multi-agent (several `agentId`s in one gateway)** — **Yes, it works.** Each agent has its own **workspace** (`AGENTS.md`, `SOUL.md`, memory, skills), **agentDir** (auth, model registry), and **sessions**. Inbound messages are routed with **`bindings`** (channel + account + peer, etc.). Do **not** point two agents at the same `agentDir` (OpenClaw warns: auth/session collisions). Copy or sync **workspaces** deliberately if you want parallel personas; keep routing explicit in config.
+
+**Sub-agents (background runs via `sessions_spawn` / `/subagents`)** — **Yes, they work** for parallel research, long tasks, and orchestration. Defaults: isolated child session, own context cost; use **`context: "fork"`** only when the child must see the current transcript (sparingly). Nesting: `maxSpawnDepth` can allow orchestrator → worker patterns; depth-2 workers cannot spawn further.
+
+**Critical sub-agent quirk (from OpenClaw):** sub-agent context injects **`AGENTS.md` and `TOOLS.md` only** — not `SOUL.md`, `USER.md`, `HEARTBEAT.md`, `IDENTITY.md`, or `BOOTSTRAP.md`. So **safety and task rules that must apply to sub-agents belong in this file (or `TOOLS.md`)**, not only in `SOUL.md` / `USER.md`.
+
+**Tooling:** `sessions_spawn` is exposed under broad tool profiles (e.g. `coding` / `full`); the **`messaging` profile does not** include it unless the user adds `tools.alsoAllow` (or changes profile). Use `/tools` in-session to see the effective list.
+
+**Resilience:** If the **gateway restarts**, in-flight sub-agent “announce back” to the parent can be **lost** (best-effort). File-based **memory in the main workspace** is unchanged; don’t assume a child completed without checking.
+
 ## Session Startup (compact reinjection)
 
 These headings exist for OpenClaw **post-compaction** reinjection (`Session Startup`, `Red Lines`). Keep them stable.
